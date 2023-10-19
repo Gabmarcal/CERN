@@ -11,7 +11,7 @@
     "require": {
         "slim/slim": "4.8",
         "php-di/php-di": "6",
-        "doctrine/dbal": "2.13",
+        "doctrine/dbal": "2.13.9",
         "vlucas/phpdotenv": "5.5",
         "nyholm/psr7": "^1.8",
         "nyholm/psr7-server": "^1.0"

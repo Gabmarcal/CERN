@@ -53,6 +53,17 @@ class Experiment
         );
     }
 
+    public function update(
+        string $acronym,
+        string $fullName,
+        string $address
+    ):void
+    {
+        $this->acronym = $acronym;
+        $this->fullName = $fullName;
+        $this->address = $address;
+    }
+
     public function id(): IntegerId
     {
         return $this->id;

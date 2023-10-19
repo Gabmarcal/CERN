@@ -10,6 +10,7 @@ use Glance\Onboarding\Collaboration\Application\GetExperimentDetails\Experiment 
 use Glance\Onboarding\Collaboration\Domain\Experiment;
 use Glance\Onboarding\Collaboration\Domain\ExperimentReadRepositoryInterface;
 use Glance\Onboarding\Collaboration\Domain\ExperimentWriteRepositoryInterface;
+use Glance\Onboarding\Collaboration\Domain\IntegerId;
 
 class SqlExperimentRepository implements
     ExperimentViewRepositoryInterface,
@@ -69,7 +70,7 @@ class SqlExperimentRepository implements
         return $rows ? ExperimentDetails::fromPersistence($rows[0]) : null;
     }
 
-    public function findById(int $id): Experiment
+    public function findById(IntegerId $id): Experiment
     {
         $query = "SELECT
                 E.ID AS ID,
@@ -81,7 +82,7 @@ class SqlExperimentRepository implements
         ";
         $statement = $this->connection->prepare($query);
         $payload = [
-            'id' => $id
+            'id' => $id->toInteger()
         ];
         $statement->execute($payload);
         $rows = $statement->fetchAllAssociative();
@@ -112,5 +113,31 @@ class SqlExperimentRepository implements
             'address' => $experiment->address()
         ];
         $statement->execute($payload);
+    }
+
+    public function updateExperiment(Experiment $experiment): void
+    {
+        $query = "UPDATE EXPERIMENT
+            SET
+                ACRONYM = :acronym,
+                FULL_NAME = :fullName,
+                ADDRESS = :address
+            WHERE ID = :id
+        ";
+        $statement = $this->connection->prepare($query);
+        $payload = [
+            "id" => $experiment->id()->toInteger(),
+            "acronym" => $experiment->acronym(),
+            "fullName" => $experiment->fullName(),
+            "address" => $experiment->address()
+        ];
+        $statement->execute($payload);
+    }
+
+    public function deleteExperiment(int $id): void
+    {
+        $query = "DELETE FROM EXPERIMENT WHERE ID = :varId";
+        $statement = $this->connection->prepare($query);
+        $statement->execute(["varId" => $id]);
     }
 }
